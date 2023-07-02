@@ -1,0 +1,25 @@
+
+---
+description: 'A React Component for rendering and editing text.'
+labels: ['text', 'ui']
+---
+
+> This component works as an Editable Typography field and currently works as part of a form built with _react-hook-form_ and does not expose state directly.
+> For a simple typography component, prefer the MUI `Typography` component.
+
+Although style can be passed through the `style` prop, prefer to have the style passed down from the theme given to the `ThemeProvider` component.
+
+The component supports 4 states:
+- Normal
+- Edit
+- Loading
+- Error
+
+On click inside the `Text` container, the state changes from `Normal` to `Edit`.
+On clicking outside the container, it changes back to `Normal`.
+The state can also be passed as a Prop.
+When `Loading` state is passed, it renders a skeleton.
+
+The component also supports validation directly from _react-hook-form_. Validation logic is passed directly to the wrapper component `FormWrapper`.
+
+The component does not support HTML input for now. That functionality might be added later.

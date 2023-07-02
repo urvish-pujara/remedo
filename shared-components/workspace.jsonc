@@ -1,0 +1,82 @@
+/**
+ * this is the main configuration file of your bit workspace.
+ * for full documentation, please see: https://bit.dev/docs/workspace/workspace-configuration
+ **/{
+  "$schema": "https://static.bit.dev/teambit/schemas/schema.json",
+  /**
+   * main configuration of the Bit workspace.
+   **/
+  "teambit.workspace/workspace": {
+    /**
+     * the name of the component workspace. used for development purposes.
+     **/
+    "name": "shared-components",
+    /**
+     * set the icon to be shown on the Bit server.
+     **/
+    "icon": "https://uploads-ssl.webflow.com/613bb87ed839661faafd5b00/6151d1fb1511f7834061becd_Remedologo.svg",
+    /**
+     * default directory to place a component during `bit import` and `bit create`.
+     * the following placeholders are available:
+     * name - component name includes namespace, e.g. 'ui/button'.
+     * scopeId - full scope-id includes the owner, e.g. 'teambit.compilation'.
+     * scope - scope name only, e.g. 'compilation'.
+     * owner - owner name in bit.dev, e.g. 'teambit'.
+     **/
+    "defaultDirectory": "{name}",
+    /**
+     * default scope for all components in workspace.
+     **/
+    "defaultScope": "remedoclinitech.staging"
+  },
+  /**
+   * main configuration for component dependency resolution.
+   **/
+  "teambit.dependencies/dependency-resolver": {
+    /**
+     * choose the package manager for Bit to use. you can choose between 'yarn', 'pnpm'
+     */
+    "packageManager": "teambit.dependencies/pnpm",
+    "policy": {
+      "dependencies": {
+        "@mui/x-date-pickers": "6.1.0",
+        "@types/react-image-gallery": "1.2.0",
+        "dayjs": "^1.11.7",
+        "next-seo": "6.0.0",
+        "react-helmet": "6.1.0",
+        "react-image-gallery": "1.2.11",
+        "react-phone-input-2": "^2.15.1",
+        "react-swipeable-views": "^0.14.0",
+        "tozod": "3.0.0"
+      },
+      "peerDependencies": {
+        "@emotion/react": "11.10.5",
+        "@emotion/styled": "^11.10.5",
+        "@hookform/resolvers": "^2.9.10",
+        "@mui/material": "5.11.0",
+        "next": "13.0.7",
+        "react": "17.0.2",
+        "react-dom": "^17.0.2",
+        "react-hook-form": "^7.40.0",
+        "zod": "^3.19.1"
+      }
+    },
+    "linkCoreAspects": true
+  },
+  /**
+   * workspace variants allow to set different subsets of configuration for components in your
+   * workspace. this is extremely useful for upgrading, aligning and building components with a new
+   * set of dependencies. a rule can be a directory or a component-id/namespace, in which case,
+   * wrap the rule with curly brackets (e.g. `"{ui/*}": {}`)
+   * see https://bit.dev/docs/workspace/variants for more info.
+   **/
+  "teambit.workspace/variants": {
+    "*": {}
+  },
+  "teambit.generator/generator": {
+    "aspects": [
+      "remedoclinitech.tooling/generator/react-component-template"
+    ]
+  },
+  "remedoclinitech.tooling/generator/react-component-template": {}
+}

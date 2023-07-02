@@ -1,0 +1,131 @@
+import React from 'react';
+import { Box, Button, SxProps } from '@mui/material';
+import { Text, TextProps } from '@remedoclinitech/staging.atoms.text-component.text';
+import { ReviewCard, ReviewCardProps } from '@remedoclinitech/staging.molecules.cards.review-card';
+import { findComponent } from '@remedoclinitech/staging.common.find-component';
+import { ComponentProps } from '@remedoclinitech/staging.common.utils';
+import SwipeableViews from 'react-swipeable-views';
+
+type reviewCardWrapperProps = {
+  style?: {
+    reviewcard?: SxProps;
+    mainbox?: SxProps;
+    scroller?: SxProps;
+    textbox?: SxProps;
+  };
+};
+type children = {
+  '@remedoclinitech/staging.atoms.text-component.text': TextProps[];
+  '@remedoclinitech/staging.molecules.cards.review-card': ReviewCardProps[];
+};
+
+export type ReviewCardWrapperProps = ComponentProps<reviewCardWrapperProps, children, never>;
+
+export function ReviewCardWrapper({ data }: ReviewCardWrapperProps) {
+  const reviewCards = data?.cMap?.['@remedoclinitech/staging.molecules.cards.review-card'];
+  const totalReviewCards = reviewCards?.length || 0;
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const itemsPerPage = 1;
+  const totalPages = Math.ceil(totalReviewCards / itemsPerPage);
+  const arrayOfPages = Array.from(Array(totalPages).keys());
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const styles = {
+    slide: {
+      padding: 15,
+      minHeight: 100,
+      color: '#fff',
+    },
+    slide1: {
+      background: '#FEA900',
+    },
+    slide2: {
+      background: '#B3DC4A',
+    },
+    slide3: {
+      background: '#6AC0FF',
+    },
+  };
+
+  React.useEffect(() => {
+    console.log(currentPage);
+  }, [currentPage]);
+
+  const handleSwipeChange = (index: number) => {
+    setCurrentPage(index);
+  };
+
+  // Autoscroll functionality
+  const autoscrollInterval = 5000; // Interval in milliseconds
+  const [isAutoscrollEnabled, setIsAutoscrollEnabled] = React.useState(false);
+
+  React.useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isAutoscrollEnabled) {
+      interval = setInterval(() => {
+        const nextPage = (currentPage + 1) % totalPages;
+        setCurrentPage(nextPage);
+      }, autoscrollInterval);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [currentPage, isAutoscrollEnabled, totalPages]);
+
+  const toggleAutoscroll = () => {
+    setIsAutoscrollEnabled(!isAutoscrollEnabled);
+  };
+
+  return data?.cMap ? (
+    <Box sx={data?.p?.style?.mainbox}>
+      <Box sx={data?.p?.style?.textbox}>
+        <Box>
+          {findComponent(
+            Text,
+            data.cMap['@remedoclinitech/staging.atoms.text-component.text'],
+            'review-card-wrapper.text.header'
+          )}
+        </Box>
+        <Box>
+          {findComponent(
+            Text,
+            data.cMap['@remedoclinitech/staging.atoms.text-component.text'],
+            'review-card-wrapper.text.description'
+          )}
+        </Box>
+      </Box>
+      <SwipeableViews index={currentPage} onChangeIndex={handleSwipeChange}>
+        {reviewCards?.map((card, index) => (
+          <Box key={index} sx={styles.slide}>
+            <ReviewCard component={card.component} data={card.data} />
+          </Box>
+        ))}
+      </SwipeableViews>
+      <Box sx={data?.p?.style?.scroller}>
+        {arrayOfPages.length > 1 ? (
+          arrayOfPages.map((i) => (
+            <Button
+              key={i}
+              variant={i === currentPage ? 'contained' : 'outlined'}
+              onClick={() => handlePageChange(i)}
+              sx={{ mx: '2px', minWidth: '18px', minHeight: '18px', borderRadius: '50%', padding: 0 }}
+            />
+          ))
+        ) : (
+          <></>
+        )}
+      </Box>
+      <Box>
+        <Button variant="contained" onClick={toggleAutoscroll}>
+          {isAutoscrollEnabled ? 'Disable Autoscroll' : 'Enable Autoscroll'}
+        </Button>
+      </Box>
+    </Box>
+  ) : (
+    <></>
+  );
+}
